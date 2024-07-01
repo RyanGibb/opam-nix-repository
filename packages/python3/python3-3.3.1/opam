@@ -3,5 +3,5 @@ depends: [
   "nixpkgs" {>= "019354" & < "020111" }
 ]
 depexts: [
-  "python3"
+  "python33"
 ]

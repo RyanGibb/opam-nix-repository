@@ -3,5 +3,5 @@ depends: [
   "nixpkgs" {>= "094419" & < "096443" }
 ]
 depexts: [
-  "nodejs"
+  "nodejs-10_x"
 ]

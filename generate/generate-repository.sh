@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
 
 JSON_DIR="/mnt/nixpkgs-json"
-SELECTED_PNAMES=("python3" "rustc" "nodejs")
+SELECTED_PNAMES=("python3" "rustc" "nodejs" "ruby" "php-with-extensions" "openjdk")
 VERSIONS_DIR=/mnt/nixpkgs-versions
+VERSIONS_DIR_FILTERED=/mnt/nixpkgs-versions-filtered
 VERSION_RANGES_DIR=/mnt/nixpkgs-version-ranges
 
 mkdir $VERSIONS_DIR
@@ -20,7 +21,7 @@ for JSON_FILE in "$JSON_DIR"/*.json; do
 		if [[ ! -f "$VERSIONS_DIR/$PNAME" ]]; then
 				echo "$ATTRNAME $VERSION $INDEX $NIXPKGS_REV" > "$VERSIONS_DIR/$PNAME"
 		# if the last version of $pname recorded has a different version than $version
-		elif ! grep -1 "$ATTRNAME " "$VERSIONS_DIR/$PNAME" | tail -n 1 | grep -q "$PNAME $VERSION "; then
+		elif ! grep "^$ATTRNAME " "$VERSIONS_DIR/$PNAME" | tail -n 1 | grep -q "$ATTRNAME $VERSION "; then
 				echo "$ATTRNAME $VERSION $INDEX $NIXPKGS_REV" >> "$VERSIONS_DIR/$PNAME"
 		fi
 	done
@@ -30,24 +31,37 @@ FINAL_JSON_FILENAME="$(ls "$JSON_DIR" | tail -n 1)"
 FINAL_INDEX=$(echo "$FINAL_JSON_FILENAME" | sed -E 's/^([^-]+)-[^-_.]+(_diff)?\.json$/\1/')
 FINAL_NIXPKGS_REV=$(echo "$FINAL_JSON_FILENAME" | sed -E 's/^[^-]+-([^-_]+)(_diff)?\.json$/\1/')
 
-MKDIR $VERSION_RANGES_DIR
+mkdir $VERSIONS_DIR_FILTERED
+rm "$VERSIONS_DIR_FILTERED"/*
+
+sed '/^nodejs/!d' "$VERSIONS_DIR/nodejs" > "$VERSIONS_DIR_FILTERED/nodejs"
+sed '/^jdk/!d' "$VERSIONS_DIR/openjdk" > "$VERSIONS_DIR_FILTERED/openjdk"
+sed '/^python3/!d' "$VERSIONS_DIR/python3" | sed '/Package/d; /Full/d' > "$VERSIONS_DIR_FILTERED/python3"
+sed '/Minimal/d' "$VERSIONS_DIR/ruby" > "$VERSIONS_DIR_FILTERED/ruby"
+sed '/^rustc /!d' "$VERSIONS_DIR/rustc" > "$VERSIONS_DIR_FILTERED/rustc"
+
+mkdir $VERSION_RANGES_DIR
 rm "$VERSION_RANGES_DIR"/*
 
-for FILE IN "$VERSIONS_DIR"/*; do
+for FILE in "$VERSIONS_DIR_FILTERED"/*; do
 	echo "$FILE"
-	PNAME=$(basename -- "$f")
-	PREV_VERSION=
-	PREV_INDEX=
-	PREV_NIXPKGS_REV=
-	while read -r ATTRNAME VERSION INDEX NIXPKGS_REV; do
-		if [[ -n "$PREV_VERSION" ]]; then
-			echo "$ATTRNAME $PREV_VERSION $PREV_INDEX $PREV_NIXPKGS_REV $INDEX $NIXPKGS_REV" >> "$VERSION_RANGES_DIR"/$PNAME
-		fi
-		PREV_VERSION=$VERSION
-		PREV_INDEX=$INDEX
-		PREV_NIXPKGS_REV=$NIXPKGS_REV
-	done < "$FILE"
-	echo "$ATTRNAME $PREV_VERSION $PREV_INDEX $PREV_NIXPKGS_REV $FINAL_INDEX $FINAL_NIXPKGS_REV" >> "$VERSION_RANGES_DIR"/$PNAME
+	PNAME=$(basename -- "$FILE")
+	for ATTRNAME in $(cut -d ' ' -f 1	"$FILE" | sort | uniq); do
+		PREV_VERSION=
+		PREV_INDEX=
+		PREV_NIXPKGS_REV=
+		while read -r ATTRNAME2 VERSION INDEX NIXPKGS_REV; do
+			if [[ -n "$PREV_VERSION" ]]; then
+				echo "$ATTRNAME $PREV_VERSION $PREV_INDEX $PREV_NIXPKGS_REV $INDEX $NIXPKGS_REV" >> "$VERSION_RANGES_DIR"/$PNAME
+			fi
+			PREV_VERSION=$VERSION
+			PREV_INDEX=$INDEX
+			PREV_NIXPKGS_REV=$NIXPKGS_REV
+		done < <(grep "^$ATTRNAME " "$FILE")
+		echo "$ATTRNAME $PREV_VERSION $PREV_INDEX $PREV_NIXPKGS_REV $FINAL_INDEX $FINAL_NIXPKGS_REV" >> "$VERSION_RANGES_DIR"/$PNAME
+	done
+	# sort by last nixpkgs index
+	sort -k 5 "$VERSION_RANGES_DIR"/$PNAME -o "$VERSION_RANGES_DIR"/$PNAME
 done
 
 for FILE in "$VERSION_RANGES_DIR"/*; do

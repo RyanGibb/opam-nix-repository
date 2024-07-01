@@ -1,0 +1,3 @@
+opam-version: "2.0"
+conflict-class: "nixpkgs"
+x-nixpkgs-hash: "7120b88d59749f16b2dee8c3b7dbecef56181357"

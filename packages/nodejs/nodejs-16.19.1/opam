@@ -1,0 +1,7 @@
+opam-version: "2.0"
+depends: [
+  "nixpkgs" {>= "161709" & < "167343" }
+]
+depexts: [
+  "nodejs-16_x"
+]
