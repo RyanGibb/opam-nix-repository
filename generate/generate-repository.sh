@@ -75,10 +75,10 @@ for FILE in "$VERSION_RANGES_DIR"/*; do
 		FILE_CONTENT=$(cat <<EOF
 opam-version: "2.0"
 depends: [
-	"nixpkgs" {>= "$FIRST_INDEX" & < "$LAST_INDEX" }
+  "nixpkgs" {>= "$FIRST_INDEX" & < "$LAST_INDEX" }
 ]
 depexts: [
-	"$ATTRNAME"
+  "$ATTRNAME"
 ]
 EOF
 		)

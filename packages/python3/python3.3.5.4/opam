@@ -1,7 +1,7 @@
 opam-version: "2.0"
 depends: [
-	"nixpkgs" {>= "057648" & < "064211" }
+  "nixpkgs" {>= "057648" & < "064211" }
 ]
 depexts: [
-	"python35"
+  "python35"
 ]

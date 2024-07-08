@@ -1,7 +1,7 @@
 opam-version: "2.0"
 depends: [
-	"nixpkgs" {>= "119406" & < "122850" }
+  "nixpkgs" {>= "119406" & < "122850" }
 ]
 depexts: [
-	"rustc"
+  "rustc"
 ]

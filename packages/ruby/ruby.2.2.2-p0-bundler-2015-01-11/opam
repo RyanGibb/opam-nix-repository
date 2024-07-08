@@ -1,7 +1,7 @@
 opam-version: "2.0"
 depends: [
-	"nixpkgs" {>= "041107" & < "046012" }
+  "nixpkgs" {>= "041107" & < "046012" }
 ]
 depexts: [
-	"bundler_HEAD"
+  "bundler_HEAD"
 ]

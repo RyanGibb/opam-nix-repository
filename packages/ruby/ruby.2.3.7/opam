@@ -1,7 +1,7 @@
 opam-version: "2.0"
 depends: [
-	"nixpkgs" {>= "069830" & < "077835" }
+  "nixpkgs" {>= "069830" & < "077835" }
 ]
 depexts: [
-	"ruby_2_3"
+  "ruby_2_3"
 ]

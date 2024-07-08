@@ -1,7 +1,7 @@
 opam-version: "2.0"
 depends: [
-	"nixpkgs" {>= "086724" & < "093812" }
+  "nixpkgs" {>= "086724" & < "093812" }
 ]
 depexts: [
-	"jdk"
+  "jdk"
 ]
