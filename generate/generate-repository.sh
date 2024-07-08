@@ -69,7 +69,7 @@ for FILE in "$VERSION_RANGES_DIR"/*; do
 	PNAME=$(basename -- "$FILE")
 
 	while read -r ATTRNAME VERSION FIRST_INDEX FIRST_NIXPKGS_REV LAST_INDEX LAST_NIXPKGS_REV; do
-		DIR_PATH="packages/$PNAME/${PNAME}-${VERSION}"
+		DIR_PATH="packages/$PNAME/${PNAME}.${VERSION}"
 		mkdir -p "$DIR_PATH"
 		FILE_PATH="$DIR_PATH/opam"
 		FILE_CONTENT=$(cat <<EOF
@@ -84,7 +84,7 @@ EOF
 		)
 		echo "$FILE_CONTENT" > "$FILE_PATH"
 
-		DIR_PATH="packages/nixpkgs/nixpkgs-${FIRST_INDEX}"
+		DIR_PATH="packages/nixpkgs/nixpkgs.${FIRST_INDEX}"
 		mkdir -p "$DIR_PATH"
 		FILE_PATH="$DIR_PATH/opam"
 		FILE_CONTENT=$(cat <<EOF
@@ -95,7 +95,7 @@ EOF
 		)
 		echo "$FILE_CONTENT" > "$FILE_PATH"
 
-		DIR_PATH="packages/nixpkgs/nixpkgs-${LAST_INDEX}"
+		DIR_PATH="packages/nixpkgs/nixpkgs.${LAST_INDEX}"
 		mkdir -p "$DIR_PATH"
 		FILE_PATH="$DIR_PATH/opam"
 		FILE_CONTENT=$(cat <<EOF

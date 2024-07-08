@@ -1,7 +1,0 @@
-opam-version: "2.0"
-depends: [
-  "nixpkgs" {>= "105399" & < "110626" }
-]
-depexts: [
-  "jdk14"
-]

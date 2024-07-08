@@ -1,7 +1,0 @@
-opam-version: "2.0"
-depends: [
-  "nixpkgs" {>= "078606" & < "083905" }
-]
-depexts: [
-  "jdk11_headless"
-]

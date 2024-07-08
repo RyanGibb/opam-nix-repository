@@ -1,7 +1,0 @@
-opam-version: "2.0"
-depends: [
-  "nixpkgs" {>= "088267" & < "088576" }
-]
-depexts: [
-  "nodejs-12_x"
-]

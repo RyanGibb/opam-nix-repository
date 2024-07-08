@@ -1,7 +1,0 @@
-opam-version: "2.0"
-depends: [
-  "nixpkgs" {>= "014024" & < "014510" }
-]
-depexts: [
-  "ruby19"
-]

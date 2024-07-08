@@ -1,0 +1,7 @@
+opam-version: "2.0"
+depends: [
+	"nixpkgs" {>= "164709" & < "168117" }
+]
+depexts: [
+	"python312"
+]
